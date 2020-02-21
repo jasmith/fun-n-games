@@ -1,0 +1,59 @@
+<html>
+<body>
+	<h1>SandBox</h1>
+	<script type="text/javascript">
+		class Circle {
+
+constructor(x,y,r){
+this.x=x;
+this.y=y;
+this.r=r;
+this.puppet=[];
+}
+
+addItem(element){
+this.puppet.push(element);
+}
+}
+
+class Balloon extends Circle {
+
+	stillFloating(status=true){
+	this.status=status;
+		if (this.x <=this.r){
+		this.status=false;
+		}
+		return this.status;
+	}
+
+	jsonPump(){
+		return {"name":"julie","status":"rex"}
+	}
+}
+
+
+var c= new Circle(10,200,10);
+
+
+
+var array=[];
+
+for (x=0;x<100;x++)
+{
+array.push(x);
+}
+console.log(array.length);
+
+console.log(c.y);
+console.log(c.puppet.length);
+c.addItem("smurf");
+console.log(c.puppet.length);
+console.log(c.puppet[0]);
+var b= new Balloon(11,20,10);
+console.log("still floating"+ b.stillFloating());
+console.log("argsStatus:::"+b.status);
+var temp= b.jsonPump();
+console.log(temp.name);
+	</script>
+</body>
+</html>

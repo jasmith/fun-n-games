@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Circle Exercise </title>
+</head>
+<body>
+<canvas id="myCanvas" width="1800" height="1200"
+style="border:1px solid #c3c3c3;">
+Your browser does not support the canvas element.
+</canvas>
+
+<svg height="100" width="100">
+  <circle cx="50" cy="50" r="40" stroke="black" stroke-width="3" fill="red" onclick="alert('svg here')"; />
+    <a href="https://www.bbc.com">
+    <text x="50" y="50" text-anchor="middle">
+      &lt;smurf&gt;
+    </text>
+  </a>
+</svg>
+<script>
+var canvas = document.getElementById('myCanvas');
+
+//Helper Utilities
+	function randomizer(min,max){
+		return Math.random() * (max - min) + min;
+	}
+
+//--------------------------------------
+	class Circle {
+
+		constructor(x,y,r,color="blue"){
+		this.x=x;
+		this.y=y;
+		this.r=r;
+		this.gx=Math.floor(this.x);
+		this.gy=Math.floor(this.y);
+		this.gr=Math.floor(this.r);
+		this.gColor="white";
+		this.puppet=[];
+		this.color=color
+		this.id=0;
+		//console.log(this);
+		}
+
+		addItem(element){
+		this.puppet.push(element);
+		}
+
+	
+	}
+	///Assumes the canvas object exists - need to update so game decides how big board really is
+	class Game{
+	
+		constructor(canvas){
+			this.board=canvas;
+			this.ctx=canvas.getContext('2d');
+			this.pieces=[];
+			this.populateBoard();
+			this.config();
+		}
+
+		populateBoard(){
+		//create 100 balls
+			for (x=0;x<100;x++){
+				var piece=new Circle(randomizer(0,this.board.width),randomizer(0,this.board.height),randomizer(0,50),"orange");
+				this.draw(piece);
+				this.pieces.push(piece);
+			}
+		}
+		config(){
+			this.defaultMove=2;
+		}
+
+		play(){
+			//move all the pieces
+			for (x=0;x<this.pieces.length-1;x++){
+				var piece=this.pieces[x];
+				piece.y-=this.defaultMove;
+				this.draw(piece);
+			}
+			
+		}
+		stop(intervalObj) {
+		  clearInterval(intervalObj);
+		}
+
+		draw(c){
+			//console.log(c);
+			var gradient = this.ctx.createRadialGradient(c.gx,c.gy,c.gr,c.gx,c.gy,1);
+			gradient.addColorStop(0, c.color);
+			gradient.addColorStop(.9, c.gColor);
+			this.ctx.beginPath();
+				this.ctx.arc(c.x,c.y,c.r, 0, 2 * Math.PI, false);
+      			this.ctx.fillStyle = gradient;
+				this.ctx.fill();
+				this.ctx.lineWidth = 1;
+      			this.ctx.strokeStyle = '#ffffff';
+      			this.ctx.stroke();
+      		this.ctx.closePath();
+		}
+	}
+
+	class Board{
+		constructor(canvas){
+			this.width=canvas.width;
+			this.height=canvas.height;
+				}
+
+
+
+
+
+
+		move(){
+		var x=circleObj.x;console.log(circleObj.x);
+		var y=circleObj.y;
+		var r=circleObj.r;
+      	
+ 
+      	//console.log("gy"+gy + "y="+y);
+      
+		// Add three color stops
+		
+		if (clearScreen){
+			ctx.clearRect(0, 0, canvas.width, canvas.height);
+		}
+      	
+		ctx.beginPath();
+		ctx.arc(circleObj.x,circleObj.y,circleObj.r, 0, 2 * Math.PI, false);
+      	ctx.fillStyle = gradient;
+      	//circle.fillStyle = color;
+      	//ctx.fillText('h');
+		ctx.fill();
+
+		ctx.lineWidth = 1;
+      	ctx.strokeStyle = '#ffffff'; //green '#003300';
+      	ctx.stroke();
+      	ctx.closePath();
+      	//canvas.addEventListener('click', function() { }, false);
+		return circle
+		}
+	}
+
+
+
+
+
+
+
+
+	function circleFactory(circleObj){
+		var x=circleObj.x;
+		var y=circleObj.y;
+		var r=circleObj.r;
+      	var ctx = canvas.getContext('2d');
+      	var gradient = ctx.createRadialGradient(x,y,r, x,y,5);
+		// Add three color stops
+		gradient.addColorStop(0, circleObj.color);
+		gradient.addColorStop(.9, 'white');
+	
+      	//circle.clearRect(0, 0, canvas.width, canvas.height);
+		ctx.beginPath();
+		ctx.arc(circleObj.x,circleObj.y,circleObj.r, 0, 2 * Math.PI, false);
+      	ctx.fillStyle = gradient;
+      	//circle.fillStyle = color;
+      	ctx.fillText('h', 10, 50);
+		ctx.fill();
+
+		ctx.lineWidth = 5;
+      	ctx.strokeStyle = '#003300';
+      	ctx.stroke();
+      	ctx.closePath();
+      	//canvas.addEventListener('click', function() { }, false);
+		return circle
+	}
+
+
+
+
+	//shapeArray=[];
+	//shapeArray.push(circleFactory(530,570,randomizer(100,200),'green'));
+	//var a= circleFactory(530,570,randomizer(100,200),'green');
+
+	//var circle=circleFactory(530,570,randomizer(100,200),'green');
+	setTimeout(() => {  console.log("sleeping"); }, 2000);
+	//circle.beginPath();
+	//circle.arc(100,100, 50, 0, 2 * Math.PI, false);
+
+	let colors=["red","green","blue","yellow","purple","peach"];
+//alert(colors[randomizer(0,colors.length-1)]);
+//alert(Math.floor(randomizer(0,colors.length-1)));
+function createCircle(){
+	return circleFactory(530,570,randomizer(10,200),colors[Math.floor(randomizer(0,colors.length-1))]);
+}
+
+function draw(circle) {
+    // drawing code
+    circleFactory(circle);
+}
+//var x = canvas.width/2;
+//var y = canvas.height-30;
+
+function Circlee(x,y,r,color){
+	this.x=x;
+	this.y=y;
+	this.r=r;
+	this.color=color;
+}
+
+c=new Circle(700,100,60,"blue");
+draw(c);
+
+
+var circle = new Object(); // or just {}
+circle['x']=100;
+circle['y']=100;
+circle['r']=30;
+circle['color']="purple";
+//draw(circle.x,circle.y,circle.r,circle.color);
+
+for (x=0;x<100;x++){
+	var c=new Circle(randomizer(0,canvas.width),randomizer(0,canvas.height),30,"purple");
+	//console.log (c.x);
+	draw(c);
+
+	//draw(randomizer(0,canvas.width),randomizer(0,canvas.height),circle.r,circle.color);
+}
+
+
+//setInterval(createCircle, 20);
+//setInterval(draw(randomizer(0,canvas.width),randomizer(0,canvas.height),circle.r,circle.color), 20);
+var game=new Game(canvas);
+
+//setInterval(game.play, 20);
+
+</script>
+</body>
+</html>

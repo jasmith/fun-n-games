@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Circle Exercise </title>
+</head>
+<body>
+<h1>Balloonacy</h1>
+<canvas id="myCanvas" width="1800" height="1200"
+style="border:1px solid #c3c3c3;">
+Your browser does not support the canvas element.
+</canvas>
+
+<svg height="100" width="100">
+  <circle cx="50" cy="50" r="40" stroke="black" stroke-width="3" fill="red" onclick="alert('svg here')"; />
+    <a href="https://www.smurf.com">
+    <text x="50" y="50" text-anchor="middle">
+      &lt;smurf&gt;
+    </text>
+  </a>
+</svg>
+<script>
+var canvas = document.getElementById('myCanvas');
+
+
+canvas.addEventListener('mousemove', function(event) {
+  if(event.region) {
+    alert('ouch, my eye :(');
+  }
+});
+
+canvas.addEventListener('mousemove', function(event) {
+  if (event.region) {
+    alert('hit region: ' + event.region);
+  }
+});
+
+
+	function circleFactory(circleObj,clearScreen=false){
+		var x=circleObj.x;console.log(circleObj.x);
+		var y=circleObj.y;
+		var r=circleObj.r;
+      	var ctx = canvas.getContext('2d');
+      	var gx=Math.floor(x);
+      	var gy=Math.floor(y);
+      	var gr=Math.floor(r);
+      	//console.log("gy"+gy + "y="+y);
+      	var gradient = ctx.createRadialGradient(gx,gy,gr-10, gx-6,gy-2,0);
+		// Add three color stops
+		gradient.addColorStop(0, circleObj.color);
+		gradient.addColorStop(.9, 'white');
+		if (clearScreen){
+			ctx.clearRect(0, 0, canvas.width, canvas.height);
+		}
+      	
+		ctx.beginPath();
+		ctx.arc(circleObj.x,circleObj.y,circleObj.r, 0, 2 * Math.PI, false);
+      	ctx.fillStyle = gradient;
+      	//circle.fillStyle = color;
+      	//ctx.fillText('h');
+		ctx.fill();
+		ctx.addHitRegion({id: 'circle'});
+		ctx.lineWidth = 1;
+      	ctx.strokeStyle = '#ffffff'; //green '#003300';
+      	ctx.stroke();
+      	ctx.closePath();
+      	//canvas.addEventListener('click', function() { }, false);
+		return circle
+	}
+
+	function randomizer(min,max){
+		return Math.random() * (max - min) + min;
+	}
+
+	function stopInterval(intervalObj) {
+	  clearInterval(intervalObj);
+	}
+
+
+
+
+
+
+	//shapeArray=[];
+	//shapeArray.push(circleFactory(530,570,randomizer(100,200),'green'));
+	//var a= circleFactory(530,570,randomizer(100,200),'green');
+
+	//var circle=circleFactory(530,570,randomizer(100,200),'green');
+	setTimeout(() => {  console.log("sleeping"); }, 2000);
+	//circle.beginPath();
+	//circle.arc(100,100, 50, 0, 2 * Math.PI, false);
+
+	let colors=["red","green","blue","yellow","purple","black","white"];
+
+function createCircle(){
+	return circleFactory(530,570,randomizer(10,200),colors[Math.floor(randomizer(0,colors.length-1))]);
+}
+
+function draw(circle) {
+    // drawing code
+    circleFactory(circle);
+}
+//var x = canvas.width/2;
+//var y = canvas.height-30;
+
+function Circle(x,y,r,color){
+	this.x=x;
+	this.y=y;
+	this.r=r;
+	this.color=color;
+}
+
+c=new Circle(700,100,60,"blue");
+draw(c);
+
+
+var circle = new Object(); // or just {}
+circle['x']=100;
+circle['y']=100;
+circle['r']=30;
+circle['color']="purple";
+//draw(circle.x,circle.y,circle.r,circle.color);
+
+//var balloons=[];
+
+
+function balloonSeries(endless=false){
+	var balloons=[];
+	createBalloons(balloons);
+	this.intervalObj=setInterval(moveBalloons, 20,balloons,2);
+	this.endless=endless;
+}
+
+function createBalloons(balloons){
+	for (x=0;x<100;x++){
+	var c=new Circle(randomizer(0,canvas.width),randomizer(0,canvas.height),30,"purple");
+	balloons.push(c);
+	console.log ("balloon array count="+balloons.length);
+	draw(c);
+	}
+}
+
+function moveBalloons(balloonArray,distance){
+	var ctx = canvas.getContext('2d');
+	console.log("move balloons "+balloonArray.length);
+	ctx.clearRect(0, 0, canvas.width, canvas.height); //clears screen
+	for (x=0;x<balloonArray.length-1;x++){ //do for everyballoon on screen
+		balloonArray[x].y-=distance;
+		if (balloonArray[x].y<=balloonArray[x].r){
+			if (this.endless==true){
+				balloonArray[x].y=canvas.height;	
+				balloonArray[x].x=randomizer(0+balloonArray[x].r,canvas.height);
+			}
+			else{
+			balloonArray.splice(x, 1);  //delete /pop balloon when it reaches the top of screen
+			}
+		}
+		else
+		{
+			draw(balloonArray[x]);
+		}
+
+		if (balloonArray.length==1){
+			console.log(".....................cancel interval");
+			stopInterval(this.intervalObj);
+			//console.log("Empty Array");
+		}
+		
+	}
+}
+
+function psychoCircle(posX,posY,radiusMax){
+	var c=new Circle(posX,posY,randomizer(0,radiusMax),colors[Math.floor(randomizer(0,colors.length-1))]);
+	circleFactory(c);
+}
+
+function univeriseCircle(){
+	var c=new Circle(randomizer(0,canvas.width),randomizer(0,canvas.height),randomizer(0,300),colors[Math.floor(randomizer(0,colors.length-1))]);
+	circleFactory(c);
+}
+// #Prototype:: setInterval(function, milliseconds, param1, param2, ...)
+
+//setInterval(psychoCircle,20,600,300,250);
+//setInterval(psychoCircle,20);
+//setInterval(univeriseCircle, 20);
+//var intervalObj=setInterval(moveBalloons, 20,balloons,2);
+balloonSeries();
+</script>
+</body>
+</html>
