@@ -71,9 +71,26 @@ var canvas = document.getElementById('myCanvas');
 			this.defaultMove=2;
 		}
 
-		play(){
+		move(pieces,offSetX=0,offSetY=0){
+			console.log("move is being called");
+			//this.ctx.clearRect(0, 0, this.board.width, this.board.height);
+			//move all the pieces
+			//console.log(">>>>>>>>"+pieces.length);
+			for (x=0;x<pieces.length-1;x++){
+				//console.log("moving pieces "+x);
+				var piece=pieces[x];
+				piece.y-=offSetY;
+				this.draw(piece);
+				requestAnimationFrame(this.move(pieces));
+			}
+			
+		}
+
+		play(offSetX=0,offSetY=0){
+			//this.populateBoard();
 			//move all the pieces
 			for (x=0;x<this.pieces.length-1;x++){
+				console.log("moving pieces");
 				var piece=this.pieces[x];
 				piece.y-=this.defaultMove;
 				this.draw(piece);
@@ -86,6 +103,7 @@ var canvas = document.getElementById('myCanvas');
 
 		draw(c){
 			//console.log(c);
+			console.log("draw is being called");
 			var gradient = this.ctx.createRadialGradient(c.gx,c.gy,c.gr,c.gx,c.gy,1);
 			gradient.addColorStop(0, c.color);
 			gradient.addColorStop(.9, c.gColor);
@@ -230,9 +248,8 @@ for (x=0;x<100;x++){
 //setInterval(createCircle, 20);
 //setInterval(draw(randomizer(0,canvas.width),randomizer(0,canvas.height),circle.r,circle.color), 20);
 var game=new Game(canvas);
-
-//setInterval(game.play, 20);
-
+//setInterval(game.move,20,game.pieces,2,2);
+//requestAnimationFrame(game.move(game.pieces,0,2));
 </script>
 </body>
 </html>

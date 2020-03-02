@@ -1,59 +1,244 @@
 <html>
 <body>
 	<h1>SandBox</h1>
+	  <canvas id="canvas" width="820px" height="820px" style="background: #fff; margin:20px"></canvas>
 	<script type="text/javascript">
-		class Circle {
 
-constructor(x,y,r){
-this.x=x;
-this.y=y;
-this.r=r;
-this.puppet=[];
-}
+		document.addEventListener("keydown", keyDownHandler, false);
+		document.addEventListener("keyup", keyUpHandler, false);
+		var rightPressed = false;
+		var leftPressed = false;
+		var downPressed = false;
+		var upPressed = false;
 
-addItem(element){
-this.puppet.push(element);
-}
-}
-
-class Balloon extends Circle {
-
-	stillFloating(status=true){
-	this.status=status;
-		if (this.x <=this.r){
-		this.status=false;
+		function keyDownHandler(e) {
+	    	if(e.key == "Right" || e.key == "ArrowRight") {
+	        	rightPressed = true;
+	    	}
+	    	else if(e.key == "Left" || e.key == "ArrowLeft") {
+	        	leftPressed = true;
+	    	}
+	    	else if(e.key == "Down" || e.key == "ArrowDown") {
+	        	downPressed = true;
+	    	}
+	    	else if(e.key == "Up" || e.key == "ArrowUp") {
+	        	upPressed = true;
+	    	}
 		}
-		return this.status;
-	}
 
-	jsonPump(){
-		return {"name":"julie","status":"rex"}
+		function keyUpHandler(e) {
+		    if(e.key == "Right" || e.key == "ArrowRight") {
+		        rightPressed = false;
+		    }
+		    else if(e.key == "Left" || e.key == "ArrowLeft") {
+		        leftPressed = false;
+		    }
+		   	else if(e.key == "Down" || e.key == "ArrowDown") {
+	        	downPressed = false;
+	    	}
+	    	else if(e.key == "Up" || e.key == "ArrowUp") {
+	        	upPressed = false;
+	    	}
+		}
+
+		function playerController(){
+			if(rightPressed) {
+    			player.x += 5;
+    			if (player.x + player.r > canvas.width){
+       				player.x = canvas.width - player.r;
+    			}
+			}
+			else if(leftPressed) {
+    			player.x -= 5;
+    			if (player.x< 0+player.r){
+       				player.x= 0+player.r;
+   				}
+			}
+			else if(downPressed) {
+    			player.y += 5;
+    			if (player.y>canvas.height-player.r){
+       				player.y= canvas.height-player.r;
+   				}
+			}
+			else if(upPressed) {
+    			player.y -= 5;
+    			if (player.y<0+player.r){
+       				player.y= 0+player.r;
+   				}
+			}
+		}
+
+function randomizer(min,max){
+	return Math.random() * (max - min) + min;
+}
+
+function startGame(){
+	requestAnimationFrame(draw);
+}
+
+var monsters=[];
+
+var barriers=[];
+barriers.push({x:10,y:10,w:160,h:40});
+barriers.push({x:450,y:10,w:40,h:400});
+barriers.push({x:50,y:170,w:320,h:40});
+
+
+function drawBarriers(){
+	for (x=0;x<barriers.length;x++){
+		var b=barriers[x];
+		ctx.fillRect(b.x,b.y,b.w,b.h);
+		ctx.fillStyle = 'black';
+		ctx.fill();
+	}
+}
+
+function checkBarriers(){
+
+	for (x=0;x<barriers.length;x++){
+
+		b=barriers[x];
+		if (player.x+player.r>b.x && player.x-player.r<barriers[x].x+barriers[x].w && player.y+player.r>barriers[x].y &&player.y<barriers[x].y+barriers[x].h){
+			if (rightPressed){
+				player.x=barriers[x].x-(2*player.r);
+			}
+			if (leftPressed){
+				player.x=player.x+(2*player.r);
+			}
+
+			if (upPressed){
+				player.y=player.y+(2*player.r);
+			}
+
+			if (downPressed){
+				player.y=player.y-(2*player.r);
+			}
+			
+		}
 	}
 }
 
 
-var c= new Circle(10,200,10);
+var bw = 800;// Box width
+var bh = 800;// Box height
+var p = 10;// Padding
+
+var canvas = document.getElementById("canvas");
+var context = canvas.getContext("2d");
+var ctx = canvas.getContext("2d");
 
 
+function drawBoard(){
+    for (var x = 0; x <= bw; x += 40) {
+        context.moveTo(0.5 + x + p, p);
+        context.lineTo(0.5 + x + p, bh + p);
+    }
 
-var array=[];
-
-for (x=0;x<100;x++)
-{
-array.push(x);
+    for (var x = 0; x <= bh; x += 40) {
+        context.moveTo(p, 0.5 + x + p);
+        context.lineTo(bw + p, 0.5 + x + p);
+    }
+    context.strokeStyle = "black";
+    context.stroke();
 }
-console.log(array.length);
 
-console.log(c.y);
-console.log(c.puppet.length);
-c.addItem("smurf");
-console.log(c.puppet.length);
-console.log(c.puppet[0]);
-var b= new Balloon(11,20,10);
-console.log("still floating"+ b.stillFloating());
-console.log("argsStatus:::"+b.status);
-var temp= b.jsonPump();
-console.log(temp.name);
+
+class Monster{
+	constructor(name){
+		this.x=randomizer(canvas.width/2,canvas.width-12);
+		this.y=randomizer(canvas.height/2,canvas.height-12);
+		this.r=10;
+		this.color="red"
+		this.name=name;
+	}
+}
+
+monsters.push(new Monster("Ted"));
+monsters.push(new Monster("Bill"));
+
+function drawMonster(monster){
+	ctx.beginPath();
+	ctx.arc(monster.x, monster.y, monster.r, 0, 2 * Math.PI);
+	ctx.fillStyle = monster.color;
+	ctx.fill();
+	ctx.stroke();
+	ctx.fillStyle="black"
+}
+
+function drawMonsters(){
+	for(x=0;x<monsters.length;x++){
+		drawMonster(monsters[x]);
+	}
+}
+
+function operateMonsters(){
+	for(x=0;x<monsters.length;x++){
+		drawMonster(monsters[x]);
+		moveMonster(monsters[x]);
+	}
+}
+
+function moveMonster(monster){
+	var newX;
+	var newY;
+	//var obj = monsters.find(o => o.name === 'Ted');
+	//console.log(obj);
+	if (monster.x<player.x){ newX=monster.x+1;}
+	if (monster.x>player.x){ newX=monster.x-1;}
+	if (monster.x==player.x){ newX=monster.x+0;}
+	if (monster.y<player.y){ newY=monster.y+1;}
+	if (monster.y>player.y){ newY=monster.y-1;}
+	if (monster.y==player.y){ newY=monster.y+0;}
+	//these are seperate incase I there is a collision of monsters
+	monster.x=newX;
+	monster.y=newY;
+	
+
+}
+
+class Player{
+	constructor(){
+		this.x=30;
+		this.y=70;
+		this.r=10;
+	}
+}
+
+var player=new Player
+
+function drawPlayer(){
+	ctx.beginPath();
+	ctx.arc(player.x, player.y, player.r, 0, 2 * Math.PI);
+	ctx.fillStyle = 'green';
+	ctx.fill();
+	ctx.stroke();
+}
+
+
+function draw(){
+	playerController();
+	
+	ctx.clearRect(0, 0, canvas.width, canvas.height);
+	drawBoard();
+	drawBarriers();
+	checkBarriers();
+	drawPlayer();
+	operateMonsters();
+	requestAnimationFrame(draw);
+}
+
+
+
+
+
+
+ctx.beginPath();
+ctx.arc(110,110, 10, 0, 2 * Math.PI);
+ctx.fillStyle = 'green';
+ctx.fill();
+ctx.stroke();
+
+startGame();
 	</script>
 </body>
 </html>

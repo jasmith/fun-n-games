@@ -4,7 +4,9 @@
 	<title>Circle Exercise </title>
 </head>
 <body>
-<h1>Balloonacy</h1>
+<h1>Balloonacy X</h1>
+<button id="buttController" onclick="stopInterval(intervalObj)">Stop Transmission</button>
+<button id="buttController" onclick="startInterval()">Start Transmission</button>
 <canvas id="myCanvas" width="1800" height="1200"
 style="border:1px solid #c3c3c3;">
 Your browser does not support the canvas element.
@@ -20,23 +22,32 @@ Your browser does not support the canvas element.
 </svg>
 <script>
 var canvas = document.getElementById('myCanvas');
+var intervalObj="";
+var myMusic;
+  myMusic = new sound("assets/audio/transformer-1.mp3");
+ 
 
 
-canvas.addEventListener('mousemove', function(event) {
-  if(event.region) {
-    alert('ouch, my eye :(');
-  }
-});
+function sound(src) {
+    this.sound = document.createElement("audio");
+    this.sound.src = src;
+    this.sound.setAttribute("preload", "auto");
+    this.sound.setAttribute("controls", "none");
+    this.sound.style.display = "none";
+    document.body.appendChild(this.sound);
+    this.play = function(){
+        this.sound.play();
+    }
+    this.stop = function(){
+        this.sound.pause();
+    }    
+}
 
-canvas.addEventListener('mousemove', function(event) {
-  if (event.region) {
-    alert('hit region: ' + event.region);
-  }
-});
+
 
 
 	function circleFactory(circleObj,clearScreen=false){
-		var x=circleObj.x;console.log(circleObj.x);
+		var x=circleObj.x;
 		var y=circleObj.y;
 		var r=circleObj.r;
       	var ctx = canvas.getContext('2d');
@@ -44,7 +55,7 @@ canvas.addEventListener('mousemove', function(event) {
       	var gy=Math.floor(y);
       	var gr=Math.floor(r);
       	//console.log("gy"+gy + "y="+y);
-      	var gradient = ctx.createRadialGradient(gx,gy,gr-10, gx-6,gy-2,0);
+      	var gradient = ctx.createRadialGradient(gx,gy,gr,gx,gy,1);
 		// Add three color stops
 		gradient.addColorStop(0, circleObj.color);
 		gradient.addColorStop(.9, 'white');
@@ -55,17 +66,25 @@ canvas.addEventListener('mousemove', function(event) {
 		ctx.beginPath();
 		ctx.arc(circleObj.x,circleObj.y,circleObj.r, 0, 2 * Math.PI, false);
       	ctx.fillStyle = gradient;
+
       	//circle.fillStyle = color;
       	//ctx.fillText('h');
+      	ctx.font = "30px Arial";
+		ctx.fillText("X", circleObj.x, circleObj.y);
+      	
 		ctx.fill();
-		ctx.addHitRegion({id: 'circle'});
+		//ctx.addHitRegion({id: 'circle'});
 		ctx.lineWidth = 1;
       	ctx.strokeStyle = '#ffffff'; //green '#003300';
       	ctx.stroke();
+
       	ctx.closePath();
       	//canvas.addEventListener('click', function() { }, false);
+      	
 		return circle
 	}
+
+
 
 	function randomizer(min,max){
 		return Math.random() * (max - min) + min;
@@ -73,9 +92,12 @@ canvas.addEventListener('mousemove', function(event) {
 
 	function stopInterval(intervalObj) {
 	  clearInterval(intervalObj);
+	  myMusic.stop();
 	}
 
-
+	function startInterval(){
+		 intervalObj=setInterval(psychoCircle,10,600,300,450);
+	}
 
 
 
@@ -170,6 +192,7 @@ function moveBalloons(balloonArray,distance){
 
 function psychoCircle(posX,posY,radiusMax){
 	var c=new Circle(posX,posY,randomizer(0,radiusMax),colors[Math.floor(randomizer(0,colors.length-1))]);
+	myMusic.play();
 	circleFactory(c);
 }
 
@@ -179,11 +202,11 @@ function univeriseCircle(){
 }
 // #Prototype:: setInterval(function, milliseconds, param1, param2, ...)
 
-//setInterval(psychoCircle,20,600,300,250);
+//var intervalObj=setInterval(psychoCircle,10,600,300,450);
 //setInterval(psychoCircle,20);
 //setInterval(univeriseCircle, 20);
 //var intervalObj=setInterval(moveBalloons, 20,balloons,2);
-balloonSeries();
+//balloonSeries();
 </script>
 </body>
 </html>
